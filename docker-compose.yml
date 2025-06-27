@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:14
+    container_name: postgres2
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: job_applications
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5063:5432"
+
+  backend:
+    build:
+      context: ./Backend
+    container_name: Backend2
+    restart: always
+    depends_on:
+      - postgres
+    ports:
+      - "3063:3063"
+    volumes:
+      - ./Backend:/app
+    environment:
+      - PGHOST=postgres
+      - PGUSER=postgres
+      - PGPASSWORD=admin123
+      - PGDATABASE=job_applications
+      - PGPORT=5432
+
+  frontend:
+    build:
+      context: ./Frontend
+    container_name: Frontend2
+    restart: always
+    ports:
+      - "8096:80"
+    volumes:
+      - ./Frontend:/usr/share/nginx/html
+    depends_on:
+      - backend
+
+  hr:
+    build:
+      context: ./HR
+    container_name: HR2
+    restart: always
+    ports:
+      - "8097:80"
+    volumes:
+      - ./HR:/usr/share/nginx/html
+    depends_on:
+      - backend
+
+  view_offer:
+    build:
+      context: ./View_offer
+    container_name: View_offer2
+    restart: always
+    ports:
+      - "8098:80"
+    volumes:
+      - ./View_offer:/usr/share/nginx/html
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
+
