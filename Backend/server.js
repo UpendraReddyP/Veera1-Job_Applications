@@ -11,14 +11,14 @@ const sharp = require('sharp');
 const PDFDocument = require('pdfkit');
 
 const app = express();
-const port = 3000;
+const port = 3064;
 
 // PostgreSQL configuration
 const pool = new Pool({
     user: 'postgres',
-    host: 'localhost',
+    host: 'postgres',
     database: 'job_applications',
-    password: 'Veera@0134',
+    password: 'admin123',
     port: 5432,
 });
 
@@ -141,7 +141,7 @@ app.post('/api/applications', applicationUpload.fields([
             status: 'Pending'
         };
 
-        const baseUrl = `http://localhost:${port}/Uploads/`;
+        const baseUrl = `http://13.61.22.191:${port}/Uploads/`;
         if (files.resume) {
             formData.documents.resume = {
                 name: files.resume[0].originalname,
@@ -525,7 +525,7 @@ app.delete('/api/applications/files/:fileId', async (req, res) => {
 app.listen(port, async () => {
     try {
         await pool.connect();
-        console.log(`Server running on http://localhost:${port}`);
+        console.log(`Server running on http://13.61.22.191:${port}`);
     } catch (error) {
         console.error('Failed to connect to database:', error);
         process.exit(1);
