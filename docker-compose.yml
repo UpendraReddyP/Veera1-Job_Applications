@@ -1,0 +1,59 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres2
+    restart: always
+    environment:
+      POSTGRES_DB: job_applications
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin123
+    ports:
+      - "5064:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  backend:
+    build:
+      context: ./Backend
+    container_name: Backend2
+    restart: always
+    ports:
+      - "3064:3064"
+    depends_on:
+      - postgres
+    volumes:
+      - ./Backend/uploads:/app/Uploads
+
+  frontend:
+    build:
+      context: ./Frontend
+    container_name: Frontend2
+    ports:
+      - "8099:80"
+    depends_on:
+      - backend
+
+  hr:
+    build:
+      context: ./HR
+    container_name: HR2
+    ports:
+      - "8100:80"
+    depends_on:
+      - backend
+
+  view_offer:
+    build:
+      context: ./View_offer
+    container_name: View_offer
+    ports:
+      - "8101:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
+
