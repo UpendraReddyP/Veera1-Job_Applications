@@ -141,7 +141,7 @@ app.post('/api/applications', applicationUpload.fields([
             status: 'Pending'
         };
 
-        const baseUrl = `http://13.61.22.191:${port}/Uploads/`;
+        const baseUrl = `http://16.171.19.248:${port}/Uploads/`;
         if (files.resume) {
             formData.documents.resume = {
                 name: files.resume[0].originalname,
@@ -525,7 +525,7 @@ app.delete('/api/applications/files/:fileId', async (req, res) => {
 app.listen(port, async () => {
     try {
         await pool.connect();
-        console.log(`Server running on http://13.61.22.191:${port}`);
+        console.log(`Server running on http://16.171.19.248:${port}`);
     } catch (error) {
         console.error('Failed to connect to database:', error);
         process.exit(1);
